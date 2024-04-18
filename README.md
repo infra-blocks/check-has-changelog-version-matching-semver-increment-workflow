@@ -3,7 +3,7 @@
 [![Update From Template](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/update-from-template.yml/badge.svg)](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/update-from-template.yml)
 
 This workflow enforces the presence of a changelog entry matching the version that would be released based on the PR
-label. See [check-has-semver-label-workflow]().
+label. It is meant to be used in conjunction with [check-has-semver-label-workflow](https://github.com/infrastructure-blocks/check-has-semver-label-workflow).
 
 For example, if the current version is `1.2.3` and the PR has a `minor` label associated, the workflow will check that
 the changelog contains an entry for `1.3.0`. It will fail otherwise.
@@ -14,55 +14,68 @@ the path of a skipped required check is not the same as the path of an actual ch
 
 ## Inputs
 
-|     Name      | Required | Description       |
-|:-------------:|:--------:|-------------------|
-| example-input |   true   | An example input. |
+|      Name      | Required | Description                                                                                                                                                                              |
+|:--------------:|:--------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| changelog-file |  false   | The changelog file. See [check-has-changelog-version-action](https://github.com/infrastructure-blocks/check-has-changelog-version-action).                                               |
+|     label      |   true   | The semver label that indicates which release version will be produced. See [check-has-semver-label-workflow](https://github.com/infrastructure-blocks/check-has-semver-label-workflow). |
+|  package-file  |  false   | The package file from which to extract the current version. See [package-version-action](https://github.com/infrastructure-blocks/package-version-action).                               |
+|  package-type  |   true   | The type of package produced by the repository. [package-version-action](https://github.com/infrastructure-blocks/package-version-action).                                               |
 
 ## Secrets
 
-|      Name      | Required | Description        |
-|:--------------:|:--------:|--------------------|
-| example-secret |   true   | An example secret. |
+N/A
 
 ## Outputs
 
-|      Name      | Description        |
-|:--------------:|--------------------|
-| example-output | An example output. |
+N/A
 
 ## Permissions
 
-|     Scope     | Level | Reason   |
-|:-------------:|:-----:|----------|
-| pull-requests | read  | Because. |
+|     Scope     | Level | Reason                         |
+|:-------------:|:-----:|--------------------------------|
+| pull-requests | write | Needed to post status updates. |
 
 ## Concurrency controls
 
-Describe concurrency controls of the workflow.
+N/A
 
 ## Timeouts
 
-Describe the timeouts configured, if any.
+N/A
 
 ## Usage
 
 ```yaml
-name: Template Usage
+name: PR Checks
 
 on:
-  push: ~
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - labeled
+      - unlabeled
 
-# This needs to be a superset of what your workflow requires
-permissions:
-  pull-requests: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  example-job:
+  check-has-semver-label:
+    permissions:
+      pull-requests: write
+    uses: infrastructure-blocks/check-has-semver-label-workflow/.github/workflows/workflow.yml@v1
+  check-has-changelog-version-matching-semver-label:
+    needs: 
+      - check-has-semver-label
+    permissions:
+      contents: read
+      pull-requests: write
     uses: infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/.github/workflows/workflow.yml@v1
     with:
-      example-input: Nobody cares
-    secrets:
-      example-secret: ${{ secrets.EXAMPLE }}
+      package-type: npm
+      label: ${{ needs.check-has-semver-label.outputs.matched-label }}
 ```
 
 ### Releasing
