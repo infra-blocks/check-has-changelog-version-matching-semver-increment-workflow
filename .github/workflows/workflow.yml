@@ -1,40 +1,66 @@
-name: Your Reusable Workflow
+name: Check Has Changelog Version Matching Semver Label
 
 on:
   workflow_call:
     inputs:
-      example-input:
-        description: An example input
+      changelog-file:
+        description: The changelog file path.
+        required: false
         type: string
+      label:
+        description: The semver label that indicates which release version will be produced.
         required: true
-    secrets:
-      example-secret:
-        description: An example secret
+        type: string
+      package-file:
+        description: The file where the current version of the package will be found.
+        required: false
+        type: string
+      package-type:
+        description: The type of package to check.
         required: true
-    outputs:
-      example-output:
-        description: An example output
-        value: ${{ jobs.example-job.outputs.example-output }}
+        type: string
 
-# The set of permissions your workflow needs.
 permissions:
-  pull-requests: read
+  contents: read
+  pull-requests: write
 
-# The concurrency of your workflow.
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+env:
+  status-report-action-repository: infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow
 
 jobs:
-  example-job:
+  check-has-changelog-version-matching-label:
     runs-on: ubuntu-22.04
-    outputs:
-      example-output: ${{ steps.example-step.outputs.example-output }}
     steps:
-      - name: Example step
-        id: example-step
-        env:
-          BIG_SECRET: ${{ secrets.example-secret }}
+      - id: parse-inputs
         run: |
-          echo "your input: ${{ inputs.example-input }}"
-          echo "example-output=toto" >> "${GITHUB_OUTPUT}"
+          if test "${{ runner.debug }}" = "1"; then
+            set -x
+          fi
+      - uses: infrastructure-blocks/status-report-action@v1
+        with:
+          mode: clear
+      - if: ${{ steps.parse-inputs.outputs.skip != 'true' }}
+        uses: actions/checkout@v4
+      - if: ${{ steps.parse-inputs.outputs.skip != 'true' }}
+        id: current-version
+        uses: infrastructure-blocks/package-version-action@v1
+        with:
+          type: ${{ inputs.package-type }}
+          file: ${{ inputs.package-file }}
+      - if: ${{ steps.parse-inputs.outputs.skip != 'true' }}
+        id: next-version
+        uses: docker://public.ecr.aws/infrastructure-blocks/semver-increment-action:v1
+        with:
+          version: ${{ steps.current-version.outputs.version }}
+          type: ${{ inputs.label }}
+      - if: ${{ steps.parse-inputs.outputs.skip != 'true' }}
+        id: check-changelog
+        uses: infrastructure-blocks/check-has-changelog-version-action@v1
+        with:
+          changelog-file: ${{ inputs.changelog-file }}
+          version: ${{ steps.next-version.outputs.version }}
+      - if: ${{ failure() }}
+        uses: infrastructure-blocks/status-report-action@v1
+        with:
+          body: |
+            :boom: **Error**: expecting a changelog entry for version `${{ steps.next-version.outputs.version }}` in `${{ steps.check-changelog.outputs.changelog-file }}`!!!
