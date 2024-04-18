@@ -1,16 +1,16 @@
-# github-actions-workflow-template
-[![Git Tag Semver From Label](https://github.com/infrastructure-blocks/github-actions-workflow-template/actions/workflows/git-tag-semver-from-label.yml/badge.svg)](https://github.com/infrastructure-blocks/github-actions-workflow-template/actions/workflows/git-tag-semver-from-label.yml)
-[![Trigger Update From Template](https://github.com/infrastructure-blocks/github-actions-workflow-template/actions/workflows/trigger-update-from-template.yml/badge.svg)](https://github.com/infrastructure-blocks/github-actions-workflow-template/actions/workflows/trigger-update-from-template.yml)
+# check-has-changelog-version-matching-semver-label-workflow
+[![Git Tag Semver From Label](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/git-tag-semver-from-label.yml/badge.svg)](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/git-tag-semver-from-label.yml)
+[![Update From Template](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/update-from-template.yml/badge.svg)](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/update-from-template.yml)
 
-This repository is a template for creating reusable GitHub Actions Workflows. Go through the below checklist
-upon instantiating this template:
-- Remove the [trigger update from template workflow](.github/workflows/trigger-update-from-template.yml)
-- Edit the content of [the placeholder](.github/workflows/workflow.yml) for your reusable workflow.
-- Update the status badges:
-    - Remove the `Trigger Update From Template` status badge.
-    - Add the `Update From Template` status badge.
-    - Rename the rest of the links to point to the right repository.
-- Edit this document and update the relevant sections
+This workflow enforces the presence of a changelog entry matching the version that would be released based on the PR
+label. See [check-has-semver-label-workflow]().
+
+For example, if the current version is `1.2.3` and the PR has a `minor` label associated, the workflow will check that
+the changelog contains an entry for `1.3.0`. It will fail otherwise.
+
+When the label is "no version", this workflow is a big no-op. *Do not skip the workflow* with an `if` expression based
+on that label (`if: steps.semver-label.outputs.matched-label != 'no version'`), as GitHub Actions has an issue where
+the path of a skipped required check is not the same as the path of an actual check.
 
 ## Inputs
 
@@ -58,7 +58,7 @@ permissions:
 
 jobs:
   example-job:
-    uses: infrastructure-blocks/github-actions-workflow-template/.github/workflows/workflow.yml@v1
+    uses: infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/.github/workflows/workflow.yml@v1
     with:
       example-input: Nobody cares
     secrets:
