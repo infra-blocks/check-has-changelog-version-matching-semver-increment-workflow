@@ -20,6 +20,7 @@ the path of a skipped required check is not the same as the path of an actual ch
 |     label      |   true   | The semver label that indicates which release version will be produced. See [check-has-semver-label-workflow](https://github.com/infrastructure-blocks/check-has-semver-label-workflow). |
 |  package-file  |  false   | The package file from which to extract the current version. See [package-version-action](https://github.com/infrastructure-blocks/package-version-action).                               |
 |  package-type  |   true   | The type of package produced by the repository. [package-version-action](https://github.com/infrastructure-blocks/package-version-action).                                               |
+|      skip      |  false   | A boolean indicating whether to skip the workflow. This is to workaround the required checks discrepancy when the workflow is skipped from the caller. It defaults to false.             |
 
 ## Secrets
 
