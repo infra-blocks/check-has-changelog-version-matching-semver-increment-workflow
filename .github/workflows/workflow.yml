@@ -1,4 +1,4 @@
-name: Check Has Changelog Version Matching Semver Label
+name: Check Has Changelog Version Matching Semver Increment
 
 on:
   workflow_call:
@@ -7,8 +7,8 @@ on:
         description: The changelog file path.
         required: false
         type: string
-      label:
-        description: The semver label that indicates which release version will be produced.
+      semver-increment:
+        description: The semver increment that indicates which release version will be produced.
         required: true
         type: string
       package-file:
@@ -30,42 +30,31 @@ permissions:
   pull-requests: write
 
 env:
-  status-report-action-repository: infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow
+  status-report-action-repository: infrastructure-blocks/check-has-changelog-version-matching-semver-semver-increment-workflow
 
 jobs:
-  check-has-changelog-version-matching-label:
-    if: ${{ !inputs.skip }}
+  check-has-changelog-version-matching-semver-increment:
     runs-on: ubuntu-22.04
     steps:
-      - id: parse-inputs
-        run: |
-          if test "${{ runner.debug }}" = "1"; then
-            set -x
-          fi
-          
-          if test "${{ inputs.label }}" = "no version"; then
-            echo "skip=true" >> "${GITHUB_OUTPUT}"
-          else
-            echo "skip=false" >> "${GITHUB_OUTPUT}"
-          fi
+      # We still clear out the report just in case the previous run had skip set to false.
       - uses: infrastructure-blocks/status-report-action@v1
         with:
           mode: clear
-      - if: ${{ steps.parse-inputs.outputs.skip != 'true' }}
+      - if: ${{ !inputs.skip }}
         uses: actions/checkout@v4
-      - if: ${{ steps.parse-inputs.outputs.skip != 'true' }}
+      - if: ${{ !inputs.skip }}
         id: current-version
         uses: infrastructure-blocks/package-version-action@v1
         with:
           type: ${{ inputs.package-type }}
           file: ${{ inputs.package-file }}
-      - if: ${{ steps.parse-inputs.outputs.skip != 'true' }}
+      - if: ${{ !inputs.skip }}
         id: next-version
         uses: docker://public.ecr.aws/infrastructure-blocks/semver-increment-action:v1
         with:
           version: ${{ steps.current-version.outputs.version }}
-          type: ${{ inputs.label }}
-      - if: ${{ steps.parse-inputs.outputs.skip != 'true' }}
+          type: ${{ inputs.semver-increment }}
+      - if: ${{ !inputs.skip }}
         id: check-changelog
         uses: infrastructure-blocks/check-has-changelog-version-action@v1
         with:
