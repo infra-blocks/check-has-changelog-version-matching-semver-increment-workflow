@@ -1,4 +1,4 @@
-# check-has-changelog-version-matching-semver-label-workflow
+# check-has-changelog-version-matching-semver-increment-workflow
 [![Git Tag Semver From Label](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/git-tag-semver-from-label.yml/badge.svg)](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/git-tag-semver-from-label.yml)
 [![Update From Template](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/update-from-template.yml/badge.svg)](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/update-from-template.yml)
 
@@ -14,13 +14,13 @@ the path of a skipped required check is not the same as the path of an actual ch
 
 ## Inputs
 
-|      Name      | Required | Description                                                                                                                                                                              |
-|:--------------:|:--------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| changelog-file |  false   | The changelog file. See [check-has-changelog-version-action](https://github.com/infrastructure-blocks/check-has-changelog-version-action).                                               |
-|     label      |   true   | The semver label that indicates which release version will be produced. See [check-has-semver-label-workflow](https://github.com/infrastructure-blocks/check-has-semver-label-workflow). |
-|  package-file  |  false   | The package file from which to extract the current version. See [package-version-action](https://github.com/infrastructure-blocks/package-version-action).                               |
-|  package-type  |   true   | The type of package produced by the repository. [package-version-action](https://github.com/infrastructure-blocks/package-version-action).                                               |
-|      skip      |  false   | A boolean indicating whether to skip the workflow. This is to workaround the required checks discrepancy when the workflow is skipped from the caller. It defaults to false.             |
+|       Name       | Required | Description                                                                                                                                                                  |
+|:----------------:|:--------:|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+|  changelog-file  |  false   | The changelog file. See [check-has-changelog-version-action](https://github.com/infrastructure-blocks/check-has-changelog-version-action).                                   |
+| semver-increment |   true   | The semver increment that indicates which release version will be produced. Should be one of "major", "minor" or "patch".                                                    |
+|   package-file   |  false   | The package file from which to extract the current version. See [package-version-action](https://github.com/infrastructure-blocks/package-version-action).                   |
+|   package-type   |   true   | The type of package produced by the repository. [package-version-action](https://github.com/infrastructure-blocks/package-version-action).                                   |
+|       skip       |  false   | A boolean indicating whether to skip the workflow. This is to workaround the required checks discrepancy when the workflow is skipped from the caller. It defaults to false. |
 
 ## Secrets
 
