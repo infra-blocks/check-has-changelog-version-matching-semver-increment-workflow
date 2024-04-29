@@ -42,6 +42,8 @@ jobs:
           mode: clear
       - if: ${{ !inputs.skip }}
         uses: actions/checkout@v4
+        with:
+          fetch-depth: ${{ inputs.package-type == 'git' && 0 || 1 }}
       - if: ${{ !inputs.skip }}
         id: current-version
         uses: infrastructure-blocks/package-version-action@v1
