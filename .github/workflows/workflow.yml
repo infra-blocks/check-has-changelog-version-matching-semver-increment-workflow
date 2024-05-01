@@ -33,9 +33,14 @@ env:
   status-report-action-repository: infrastructure-blocks/check-has-changelog-version-matching-semver-semver-increment-workflow
 
 jobs:
+<<<<<<< HEAD
   check-has-changelog-version-matching-semver-increment:
+=======
+  example-job:
+>>>>>>> template/master
     runs-on: ubuntu-22.04
     steps:
+<<<<<<< HEAD
       # We still clear out the report just in case the previous run had skip set to false.
       - uses: infrastructure-blocks/status-report-action@v1
         with:
@@ -67,3 +72,14 @@ jobs:
         with:
           body: |
             :boom: **Error**: expecting a changelog entry for version `${{ steps.next-version.outputs.version }}` in `${{ steps.check-changelog.outputs.changelog-file }}`!!!
+=======
+      # This condition should be on every step.
+      - if: ${{ !inputs.skip }}
+        id: example-step
+        name: Example step
+        env:
+          BIG_SECRET: ${{ secrets.example-secret }}
+        run: |
+          echo "your input: ${{ inputs.example-input }}"
+          echo "example-output=toto" >> "${GITHUB_OUTPUT}"
+>>>>>>> template/master
