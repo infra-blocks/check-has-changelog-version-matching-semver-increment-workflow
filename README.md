@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 # check-has-changelog-version-matching-semver-increment-workflow
 [![Git Tag Semver From Label](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/git-tag-semver-from-label.yml/badge.svg)](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/git-tag-semver-from-label.yml)
 [![Update From Template](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/update-from-template.yml/badge.svg)](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/update-from-template.yml)
+=======
+# github-actions-workflow-template
+[![Release](https://github.com/infrastructure-blocks/github-actions-workflow-template/actions/workflows/release.yml/badge.svg)](https://github.com/infrastructure-blocks/github-actions-workflow-template/actions/workflows/release.yml)
+[![Trigger Update From Template](https://github.com/infrastructure-blocks/github-actions-workflow-template/actions/workflows/trigger-update-from-template.yml/badge.svg)](https://github.com/infrastructure-blocks/github-actions-workflow-template/actions/workflows/trigger-update-from-template.yml)
+>>>>>>> template/master
 
 This workflow enforces the presence of a changelog entry matching the version that would be released based on the PR
 label. It is meant to be used in conjunction with [check-has-semver-label-workflow](https://github.com/infrastructure-blocks/check-has-semver-label-workflow).
