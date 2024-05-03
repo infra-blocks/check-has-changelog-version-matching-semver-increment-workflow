@@ -1,5 +1,5 @@
 # check-has-changelog-version-matching-semver-increment-workflow
-[![Git Tag Semver From Label](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/git-tag-semver-from-label.yml/badge.svg)](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/git-tag-semver-from-label.yml)
+[![Release](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/release.yml/badge.svg)](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/release.yml)
 [![Update From Template](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/update-from-template.yml/badge.svg)](https://github.com/infrastructure-blocks/check-has-changelog-version-matching-semver-label-workflow/actions/workflows/update-from-template.yml)
 
 This workflow enforces the presence of a changelog entry matching the version that would be released based on the PR
