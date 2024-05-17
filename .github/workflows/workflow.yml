@@ -30,14 +30,14 @@ permissions:
   pull-requests: write
 
 env:
-  status-report-action-repository: infrastructure-blocks/check-has-changelog-version-matching-semver-semver-increment-workflow
+  status-report-action-repository: infra-blocks/check-has-changelog-version-matching-semver-semver-increment-workflow
 
 jobs:
   check-has-changelog-version-matching-semver-increment:
     runs-on: ubuntu-22.04
     steps:
       # We still clear out the report just in case the previous run had skip set to false.
-      - uses: infrastructure-blocks/status-report-action@v1
+      - uses: infra-blocks/status-report-action@v1
         with:
           mode: clear
       - if: ${{ !inputs.skip }}
@@ -46,24 +46,24 @@ jobs:
           fetch-depth: ${{ inputs.package-type != 'git' && 1 || 0 }}
       - if: ${{ !inputs.skip }}
         id: current-version
-        uses: infrastructure-blocks/package-version-action@v1
+        uses: infra-blocks/package-version-action@v1
         with:
           type: ${{ inputs.package-type }}
           file: ${{ inputs.package-file }}
       - if: ${{ !inputs.skip }}
         id: next-version
-        uses: docker://public.ecr.aws/infrastructure-blocks/semver-increment-action:v1
+        uses: docker://public.ecr.aws/infra-blocks/semver-increment-action:v1
         with:
           version: ${{ steps.current-version.outputs.version }}
           type: ${{ inputs.semver-increment }}
       - if: ${{ !inputs.skip }}
         id: check-changelog
-        uses: infrastructure-blocks/check-has-changelog-version-action@v1
+        uses: infra-blocks/check-has-changelog-version-action@v1
         with:
           changelog-file: ${{ inputs.changelog-file }}
           version: ${{ steps.next-version.outputs.version }}
       - if: ${{ failure() }}
-        uses: infrastructure-blocks/status-report-action@v1
+        uses: infra-blocks/status-report-action@v1
         with:
           body: |
             :boom: **Error**: expecting a changelog entry for version `${{ steps.next-version.outputs.version }}` in `${{ steps.check-changelog.outputs.changelog-file }}`!!!
